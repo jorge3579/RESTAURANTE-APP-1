@@ -1,0 +1,29 @@
+# EAS archiva este monorepositorio desde la raiz Git.
+.git/
+.agents/
+.codex/
+**/node_modules/
+**/.pnpm-store/
+**/.expo/
+**/.eas-inspect-*/
+**/dist/
+**/coverage/
+
+# Secretos y archivos locales no necesarios para compilar las aplicaciones.
+.env
+**/.env
+**/.env.*
+!**/.env.example
+*.keystore
+*.jks
+*.p12
+*.key
+*.pem
+*.log
+pnpm-debug.log*
+
+# Instaladores, respaldos y documentacion operativa ajenos al APK.
+postgresql-*-windows-x64.exe
+password postgres.txt
+sql data.txt
+tools/network/*.log

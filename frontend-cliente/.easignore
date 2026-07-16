@@ -1,0 +1,27 @@
+**/node_modules/
+**/.pnpm-store/
+**/.expo/
+**/dist*/
+**/coverage/
+.env
+.env.*
+!.env.example
+*.log
+pnpm-debug.log*
+*.apk
+*.exe
+.git/
+.idea/
+
+# EAS archiva desde la raiz Git. La app cliente no depende de estos archivos.
+postgresql-*-windows-x64.exe
+backend/
+frontend-restaurante/
+database/
+deploy/
+docs/
+tools/
+*.md
+docker-compose.yml
+password postgres.txt
+sql data.txt

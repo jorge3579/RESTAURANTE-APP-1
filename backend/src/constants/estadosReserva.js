@@ -1,0 +1,15 @@
+const ESTADOS_RESERVA = Object.freeze({
+
+    PENDIENTE: "PENDIENTE",
+
+    CONFIRMADA: "CONFIRMADA",
+
+    CANCELADA: "CANCELADA",
+
+    FINALIZADA: "FINALIZADA",
+
+    NO_ASISTIO: "NO_ASISTIO"
+
+});
+
+export default ESTADOS_RESERVA;

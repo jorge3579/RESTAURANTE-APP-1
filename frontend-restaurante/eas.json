@@ -1,0 +1,43 @@
+{
+    "cli": {
+        "version": ">= 13.0.0",
+        "appVersionSource": "local"
+    },
+    "build": {
+        "development": {
+            "developmentClient": true,
+            "distribution": "internal"
+        },
+        "preview": {
+            "distribution": "internal",
+            "android": {
+                "buildType": "apk"
+            }
+        },
+        "lan": {
+            "environment": "production",
+            "node": "20.18.3",
+            "env": {
+                "EXPO_PUBLIC_API_URL": "http://192.168.0.4:3000/api",
+                "EXPO_PUBLIC_SOCKET_URL": "http://192.168.0.4:3000"
+            },
+            "android": {
+                "buildType": "apk"
+            }
+        },
+        "production": {
+            "environment": "production",
+            "node": "20.18.3",
+            "env": {
+                "EXPO_PUBLIC_API_URL": "http://192.168.0.5:3000/api",
+                "EXPO_PUBLIC_SOCKET_URL": "http://192.168.0.5:3000"
+            },
+            "android": {
+                "buildType": "apk"
+            }
+        }
+    },
+    "submit": {
+        "production": {}
+    }
+}

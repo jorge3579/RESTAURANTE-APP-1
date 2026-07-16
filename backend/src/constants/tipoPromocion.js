@@ -1,0 +1,7 @@
+const TIPO_PROMOCION = Object.freeze({
+    PORCENTAJE: "PORCENTAJE",
+    MONTO_FIJO: "MONTO_FIJO",
+    PRODUCTO_GRATIS: "PRODUCTO_GRATIS"
+});
+
+export default TIPO_PROMOCION;

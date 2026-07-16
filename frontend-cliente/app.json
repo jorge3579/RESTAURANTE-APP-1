@@ -1,0 +1,36 @@
+{
+  "expo": {
+    "name": "SmartRestaurantQR Cliente",
+    "owner": "jorge3579.1",
+    "slug": "smartrestaurantqr-cliente",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "light",
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "plugins": [
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "kotlinVersion": "1.9.25",
+            "usesCleartextTraffic": true
+          }
+        }
+      ]
+    ],
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "package": "com.smartrestaurantqr.cliente",
+      "versionCode": 1
+    },
+    "extra": {
+      "eas": {
+        "projectId": "1daec61b-ce4b-4ccb-be31-a59834cd4748"
+      }
+    }
+  }
+}

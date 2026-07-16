@@ -1,0 +1,9 @@
+const ESTADO_PAGO = Object.freeze({
+    PENDIENTE: "PENDIENTE",
+    APROBADO: "APROBADO",
+    RECHAZADO: "RECHAZADO",
+    CANCELADO: "CANCELADO",
+    REEMBOLSADO: "REEMBOLSADO"
+});
+
+export default ESTADO_PAGO;

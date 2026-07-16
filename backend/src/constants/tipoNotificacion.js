@@ -1,0 +1,9 @@
+const TIPO_NOTIFICACION = Object.freeze({
+    RESERVA: "RESERVA",
+    PEDIDO: "PEDIDO",
+    PAGO: "PAGO",
+    PROMOCION: "PROMOCION",
+    SISTEMA: "SISTEMA"
+});
+
+export default TIPO_NOTIFICACION;

@@ -1,0 +1,62 @@
+{
+    "name": "smartrestaurantqr-backend",
+    "version": "1.0.0",
+    "description": "Backend SmartRestaurantQR",
+    "packageManager": "pnpm@11.11.0",
+    "type": "module",
+    "main": "src/server.js",
+    "scripts": {
+        "start": "node src/server.js",
+        "dev": "nodemon src/server.js",
+        "db:test": "node scripts/test-postgresql.js",
+        "lint": "eslint .",
+        "format": "prettier --write .",
+        "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --runInBand",
+        "coverage": "node --experimental-vm-modules node_modules/jest/bin/jest.js --coverage --runInBand"
+        
+    },
+    "keywords": [
+        "restaurant",
+        "qr",
+        "reservas",
+        "node",
+        "express",
+        "sqlserver"
+    ],
+    "author": "Proyecto Final",
+    "license": "MIT",
+    "dependencies": {
+        "bcrypt": "^5.1.1",
+        "compression": "^1.8.1",
+        "cookie-parser": "^1.4.7",
+        "cors": "^2.8.6",
+        "dotenv": "^17.4.2",
+        "express": "^5.2.1",
+        "express-rate-limit": "^8.0.1",
+        "express-validator": "^7.3.2",
+        "helmet": "^8.2.0",
+        "jsonwebtoken": "^9.0.3",
+        "mercadopago": "^2.8.0",
+        "morgan": "^1.11.0",
+        "multer": "^2.2.0",
+        "node-cron": "^4.6.0",
+        "nodemailer": "^9.0.3",
+        "pdfkit": "^0.17.2",
+        "pg": "^8.22.0",
+        "qrcode": "^1.5.4",
+        "socket.io": "^4.8.3",
+        "swagger-jsdoc": "^6.3.0",
+        "swagger-ui-express": "^5.0.1",
+        "uuid": "^11.1.1",
+        "winston": "^3.17.0",
+        "xlsx": "^0.18.5"
+    },
+    "devDependencies": {
+        "@eslint/js": "^9.34.0",
+        "eslint": "^9.34.0",
+        "jest": "^30.0.5",
+        "nodemon": "^3.1.14",
+        "prettier": "^3.6.2",
+        "supertest": "^7.1.4"
+    }
+}

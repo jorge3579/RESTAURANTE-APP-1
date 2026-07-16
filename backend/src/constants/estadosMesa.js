@@ -1,0 +1,15 @@
+const ESTADOS_MESA = Object.freeze({
+
+    LIBRE: "LIBRE",
+
+    RESERVADA: "RESERVADA",
+
+    OCUPADA: "OCUPADA",
+
+    LIMPIEZA: "LIMPIEZA",
+
+    FUERA_SERVICIO: "FUERA_SERVICIO"
+
+});
+
+export default ESTADOS_MESA;

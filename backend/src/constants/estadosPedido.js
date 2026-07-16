@@ -1,0 +1,17 @@
+const ESTADOS_PEDIDO = Object.freeze({
+
+    CREADO: "CREADO",
+
+    PAGADO: "PAGADO",
+
+    EN_PREPARACION: "EN_PREPARACION",
+
+    LISTO: "LISTO",
+
+    ENTREGADO: "ENTREGADO",
+
+    CANCELADO: "CANCELADO"
+
+});
+
+export default ESTADOS_PEDIDO;
