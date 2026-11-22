@@ -1,0 +1,5 @@
+@page "/reportes"
+@attribute [Authorize]
+<PageTitle>Reportes</PageTitle><div class="page-heading"><div><span class="eyebrow">ANÁLISIS</span><MudText Typo="Typo.h4">Centro de reportes</MudText><p>Documentos listos para imprimir, compartir o seguir analizando.</p></div></div><MudGrid>
+<MudItem xs="12" md="6"><MudPaper Class="pa-6"><MudText Typo="Typo.h6">Inventario valorizado</MudText><MudText Class="mb-4">Existencias, costos y valor total.</MudText><MudButton Href="api/reports/inventory.pdf" Target="_blank" Variant="Variant.Filled" Color="Color.Primary">PDF</MudButton><MudButton Href="api/reports/inventory.xlsx" Target="_blank" Class="ms-2">Excel</MudButton></MudPaper></MudItem>
+<MudItem xs="12" md="6"><MudPaper Class="pa-6"><MudText Typo="Typo.h6">Ventas</MudText><MudText Class="mb-4">Operaciones y totales del período completo.</MudText><MudButton Href="api/reports/sales.pdf" Target="_blank" Variant="Variant.Filled" Color="Color.Primary">PDF</MudButton><MudButton Href="api/reports/sales.xlsx" Target="_blank" Class="ms-2">Excel</MudButton></MudPaper></MudItem></MudGrid>

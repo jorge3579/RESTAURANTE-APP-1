@@ -14,13 +14,15 @@ import {
 import pedidoService from "../../services/pedidoService";
 import mercadoPagoService from "../../services/mercadoPagoService";
 
-export default function DetallePedidoScreen({ route }) {
+export default function DetallePedidoScreen({ route, navigation }) {
 
     const { idPedido } = route.params;
 
     const [pedido, setPedido] = useState(null);
 
     const [loading, setLoading] = useState(true);
+
+    const [procesandoPago, setProcesandoPago] = useState(false);
 
     async function cargar() {
 
@@ -52,6 +54,43 @@ export default function DetallePedidoScreen({ route }) {
                 "Error",
                 error.response?.data?.message || "No se pudo crear el pago."
             );
+
+        }
+
+    }
+
+    async function simularPagoMercadoPago() {
+
+        try {
+
+            setProcesandoPago(true);
+
+            const resultado = await mercadoPagoService.simularAprobacion(
+                idPedido
+            );
+
+            Alert.alert(
+                "Pago aprobado",
+                "El cobro de Mercado Pago fue simulado. La reserva ya estÃ¡ confirmada y su QR fue generado."
+            );
+
+            navigation.getParent()?.navigate("Reservas", {
+                screen: "ReservaQR",
+                params: {
+                    idReserva: resultado.reserva.idReserva
+                }
+            });
+
+        } catch (error) {
+
+            Alert.alert(
+                "Error",
+                error.response?.data?.message || "No se pudo simular el cobro."
+            );
+
+        } finally {
+
+            setProcesandoPago(false);
 
         }
 
@@ -107,10 +146,18 @@ export default function DetallePedidoScreen({ route }) {
 
             <View style={styles.separator} />
 
-            <Button
-                title="Pagar con Mercado Pago"
-                onPress={pagarMercadoPago}
-            />
+            {pedido.idReserva ? (
+                <Button
+                    title={procesandoPago ? "Procesando cobro..." : "Simular pago con Mercado Pago"}
+                    onPress={simularPagoMercadoPago}
+                    disabled={procesandoPago}
+                />
+            ) : (
+                <Button
+                    title="Pagar con Mercado Pago"
+                    onPress={pagarMercadoPago}
+                />
+            )}
 
         </ScrollView>
     );

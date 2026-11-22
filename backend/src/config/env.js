@@ -186,9 +186,17 @@ const env = Object.freeze({
 
     cors: Object.freeze({
 
-        origin: obtenerVariableOpcional(
-            "CORS_ORIGIN",
-            "*"
+        // Lista de orígenes permitidos. El valor "*" conserva el
+        // comportamiento histórico de desarrollo; en producción se
+        // enumeran los dominios separados por coma.
+        origins: Object.freeze(
+            obtenerVariableOpcional(
+                "CORS_ORIGIN",
+                "*"
+            )
+                .split(",")
+                .map((origen) => origen.trim())
+                .filter((origen) => origen.length > 0)
         )
 
     }),

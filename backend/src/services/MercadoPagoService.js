@@ -20,6 +20,79 @@ import {
 
 export default class MercadoPagoService extends BaseService {
 
+    async simularAprobacion(idUsuario, data) {
+
+        const pedido = await pedidoService.obtenerPorId(data.idPedido);
+
+        if (Number(pedido.idUsuario) !== Number(idUsuario)) {
+            throw new AppError("El pedido no pertenece al usuario autenticado.", 403);
+        }
+
+        if (!pedido.idReserva) {
+            throw new AppError(
+                "La simulaciÃ³n estÃ¡ disponible para pedidos asociados a una reserva.",
+                400
+            );
+        }
+
+        const reservaPendiente = await reservaService.obtenerPorId(pedido.idReserva);
+
+        if (!["PENDIENTE", "PENDIENTE_PAGO", "CONFIRMADA"].includes(
+            reservaPendiente.estado
+        )) {
+            throw new AppError(
+                "La reserva no puede pagarse en su estado actual.",
+                409
+            );
+        }
+
+        let pago = await pagoService.obtenerAprobadoPorPedido(pedido.idPedido);
+        const esNuevoPago = !pago;
+
+        if (!pago) {
+            pago = await pagoService.crear(idUsuario, {
+                idPedido: pedido.idPedido,
+                metodoPago: METODO_PAGO.MERCADO_PAGO,
+                proveedor: "Mercado Pago (simulado)",
+                referenciaExterna: null,
+                monto: pedido.total
+            });
+
+            pago = await pagoService.aprobar(
+                pago.idPago,
+                `SIM-MP-${pago.idPago}`
+            );
+        }
+
+        await pedidoService.activarDespuesDePago(pedido.idPedido);
+
+        const reserva = await reservaService.confirmar(pedido.idReserva);
+        const qr = await ingresoQRService.generarQR(pedido.idReserva);
+
+        if (esNuevoPago) {
+            await fidelizacionService.sumarCompra(
+                pedido.idUsuario,
+                pedido.idPedido,
+                pedido.total
+            );
+
+            await notificacionService.crear({
+                idUsuario: pedido.idUsuario,
+                titulo: "Pago simulado aprobado",
+                mensaje: "El cobro de demostraciÃ³n fue aprobado y tu reserva quedÃ³ confirmada.",
+                tipo: TIPO_NOTIFICACION.PAGO
+            });
+        }
+
+        return {
+            simulado: true,
+            pago,
+            reserva,
+            qr
+        };
+
+    }
+
     async crearPreferencia(idUsuario, data) {
 
         if (!env.mercadoPago.accessToken) {
@@ -152,6 +225,8 @@ export default class MercadoPagoService extends BaseService {
             const pedido = await pedidoService.obtenerPorId(
                 pago.idPedido
             );
+
+            await pedidoService.activarDespuesDePago(pedido.idPedido);
 
             if (pedido.idReserva) {
 

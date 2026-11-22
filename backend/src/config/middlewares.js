@@ -10,6 +10,38 @@ import rateLimit from "express-rate-limit";
 import env from "./env.js";
 import requestIdMiddleware from "../middlewares/requestIdMiddleware.js";
 
+// Las aplicaciones móviles nativas no envían la cabecera Origin, por lo que
+// denegar las peticiones sin Origin rompería los APK ya distribuidos.
+// Solo se restringen los orígenes de navegador, que son los que aplican CORS.
+function crearValidadorOrigen(origenesPermitidos) {
+
+    if (origenesPermitidos.includes("*")) {
+
+        return true;
+
+    }
+
+    return (origin, callback) => {
+
+        if (!origin) {
+
+            return callback(null, true);
+
+        }
+
+        return callback(
+            null,
+            origenesPermitidos.includes(origin)
+        );
+
+    };
+
+}
+
+const validarOrigen = crearValidadorOrigen(
+    env.cors.origins
+);
+
 export function configureCoreMiddlewares(app) {
 
     app.use(helmet());
@@ -18,7 +50,7 @@ export function configureCoreMiddlewares(app) {
 
     app.use(
         cors({
-            origin: env.cors.origin,
+            origin: validarOrigen,
             credentials: true
         })
     );

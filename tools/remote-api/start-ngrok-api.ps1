@@ -1,4 +1,7 @@
-param([int]$Port = 3000)
+param(
+    [int]$Port = 3000,
+    [string]$PublicUrl = "https://emphasis-expanse-evolution.ngrok-free.dev"
+)
 
 $ErrorActionPreference = "Stop"
 $runtimePath = Join-Path $PSScriptRoot "runtime"
@@ -26,7 +29,7 @@ $logPath = Join-Path $runtimePath "ngrok.log"
 Remove-Item -LiteralPath $logPath -Force -ErrorAction SilentlyContinue
 
 $process = Start-Process -FilePath $ngrok.FullName `
-    -ArgumentList @("http", $Port, "--log", $logPath, "--log-format", "json") `
+    -ArgumentList @("http", $Port, "--url", $PublicUrl, "--log", $logPath, "--log-format", "json") `
     -WindowStyle Hidden -PassThru
 $process.Id | Set-Content (Join-Path $runtimePath "ngrok.pid")
 
@@ -47,4 +50,5 @@ if (-not $httpsTunnel) {
 $httpsTunnel.public_url | Set-Content (Join-Path $runtimePath "ngrok-public-url.txt")
 Write-Host "API: $($httpsTunnel.public_url)/api" -ForegroundColor Green
 Write-Host "Socket: $($httpsTunnel.public_url)"
+Write-Host "Stock: $($httpsTunnel.public_url)/stock/"
 

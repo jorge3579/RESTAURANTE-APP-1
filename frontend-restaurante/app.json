@@ -3,7 +3,7 @@
     "name": "SmartRestaurantQR Restaurante",
     "owner": "jorge3579.1",
     "slug": "smartrestaurantqr-restaurante",
-    "version": "1.0.0",
+    "version": "1.1.2",
     "orientation": "portrait",
     "userInterfaceStyle": "light",
     "plugins": [
@@ -22,7 +22,7 @@
     },
     "android": {
       "package": "com.smartrestaurantqr.restaurante",
-      "versionCode": 1
+      "versionCode": 4
     },
     "extra": {
       "eas": {

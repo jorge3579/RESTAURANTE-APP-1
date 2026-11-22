@@ -2,6 +2,19 @@ import httpClient from "./httpClient";
 
 class MercadoPagoService {
 
+    async simularAprobacion(idPedido) {
+
+        const response = await httpClient.post(
+            "/mercado-pago/simulacion/aprobar",
+            {
+                idPedido
+            }
+        );
+
+        return response.data.data;
+
+    }
+
     async crearPreferencia(idPedido) {
 
         const response = await httpClient.post(

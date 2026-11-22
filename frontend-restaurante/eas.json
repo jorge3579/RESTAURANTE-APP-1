@@ -18,8 +18,9 @@
             "environment": "production",
             "node": "20.18.3",
             "env": {
-                "EXPO_PUBLIC_API_URL": "http://192.168.0.4:3000/api",
-                "EXPO_PUBLIC_SOCKET_URL": "http://192.168.0.4:3000"
+                "EXPO_PUBLIC_API_URL": "http://192.168.0.7:3000/api",
+                "EXPO_PUBLIC_SOCKET_URL": "http://192.168.0.7:3000",
+                "EXPO_PUBLIC_STOCK_WEB_URL": "https://emphasis-expanse-evolution.ngrok-free.dev/stock/"
             },
             "android": {
                 "buildType": "apk"
@@ -29,8 +30,9 @@
             "environment": "production",
             "node": "20.18.3",
             "env": {
-                "EXPO_PUBLIC_API_URL": "http://192.168.0.5:3000/api",
-                "EXPO_PUBLIC_SOCKET_URL": "http://192.168.0.5:3000"
+                "EXPO_PUBLIC_API_URL": "https://emphasis-expanse-evolution.ngrok-free.dev/api",
+                "EXPO_PUBLIC_SOCKET_URL": "https://emphasis-expanse-evolution.ngrok-free.dev",
+                "EXPO_PUBLIC_STOCK_WEB_URL": "https://emphasis-expanse-evolution.ngrok-free.dev/stock/"
             },
             "android": {
                 "buildType": "apk"

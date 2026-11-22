@@ -138,7 +138,7 @@ export default class ReservaRepository extends BaseRepository {
                     WHERE r.id_sucursal = $1
                       AND r.fecha_reserva = $3
                       AND r.hora_reserva = $4
-                      AND r.estado IN ('PENDIENTE', 'CONFIRMADA')
+                      AND r.estado IN ('PENDIENTE', 'PENDIENTE_PAGO', 'CONFIRMADA')
               )
             ORDER BY m.capacidad ASC
             LIMIT 1

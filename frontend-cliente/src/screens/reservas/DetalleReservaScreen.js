@@ -11,7 +11,6 @@ import {
 } from "react-native";
 
 import reservaService from "../../services/reservaService";
-import ingresoQRService from "../../services/ingresoQRService";
 
 export default function DetalleReservaScreen({ route, navigation }) {
 
@@ -35,17 +34,15 @@ export default function DetalleReservaScreen({ route, navigation }) {
 
         try {
 
-            const qr = await ingresoQRService.generar(idReserva);
-
             navigation.navigate("ReservaQR", {
-                qr
+                idReserva
             });
 
         } catch (error) {
 
             Alert.alert(
                 "Error",
-                "No se pudo generar el QR."
+                error.response?.data?.message || "No se pudo generar el QR."
             );
 
         }
@@ -125,10 +122,18 @@ export default function DetalleReservaScreen({ route, navigation }) {
 
             <View style={styles.separator} />
 
-            <Button
-                title="Generar QR"
-                onPress={generarQR}
-            />
+            {reserva.estado === "CONFIRMADA" && (
+                <Button
+                    title="Ver QR de ingreso"
+                    onPress={generarQR}
+                />
+            )}
+
+            {reserva.estado === "PENDIENTE_PAGO" && (
+                <Text style={styles.pending}>
+                    El QR se habilitarÃ¡ cuando el pago simulado sea aprobado.
+                </Text>
+            )}
 
             <View style={styles.separator} />
 
@@ -170,6 +175,12 @@ const styles = StyleSheet.create({
 
     separator: {
         height: 18
+    },
+
+    pending: {
+        color: "#8a5a00",
+        fontSize: 15,
+        textAlign: "center"
     }
 
 });

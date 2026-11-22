@@ -33,6 +33,14 @@ export default class PagoService extends BaseService {
 
     }
 
+    async obtenerAprobadoPorPedido(idPedido) {
+
+        const pago = await this.repository.obtenerAprobadoPorPedido(idPedido);
+
+        return pago ? PagoDTO.fromDatabase(pago) : null;
+
+    }
+
     async crear(idUsuario, data) {
 
         const resultado = await this.repository.crear({

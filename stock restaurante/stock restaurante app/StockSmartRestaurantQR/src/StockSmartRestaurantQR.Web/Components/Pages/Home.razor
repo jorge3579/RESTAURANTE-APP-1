@@ -1,0 +1,34 @@
+﻿@page "/"
+
+@attribute [Authorize]
+@inject IInventoryService Inventory
+
+<PageTitle>Dashboard - StockSmart</PageTitle>
+
+<div class="page-heading dashboard-heading"><div><span class="eyebrow">VISIÓN GENERAL</span><MudText Typo="Typo.h4">Resumen del negocio</MudText><p class="page-subtitle">Indicadores clave y actividad reciente del inventario.</p></div><div class="live-badge"><span></span> Datos en tiempo real</div></div>
+@if (!string.IsNullOrEmpty(error)) { <MudAlert Severity="Severity.Warning">@error</MudAlert> }
+else if (model is null) { <MudProgressCircular Indeterminate="true" Color="Color.Primary" /> }
+else
+{
+    <MudGrid Class="metric-grid">
+        <MudItem xs="12" md="4"><MudPaper Class="metric metric-danger"><div class="metric-icon"><MudIcon Icon="@Icons.Material.Filled.WarningAmber" /></div><div><MudText Typo="Typo.overline">Stock crítico</MudText><MudText Typo="Typo.h3">@model.LowStockCount</MudText><small>Productos que requieren atención</small></div></MudPaper></MudItem>
+        <MudItem xs="12" md="4"><MudPaper Class="metric metric-info"><div class="metric-icon"><MudIcon Icon="@Icons.Material.Filled.ReceiptLong" /></div><div><MudText Typo="Typo.overline">Ventas de hoy</MudText><MudText Typo="Typo.h3">@model.TodaySalesCount</MudText><small>Operaciones registradas</small></div></MudPaper></MudItem>
+        <MudItem xs="12" md="4"><MudPaper Class="metric metric-success"><div class="metric-icon"><MudIcon Icon="@Icons.Material.Filled.Payments" /></div><div><MudText Typo="Typo.overline">Facturación de hoy</MudText><MudText Typo="Typo.h3">@model.TodaySalesAmount.ToString("C")</MudText><small>Total acumulado del día</small></div></MudPaper></MudItem>
+    </MudGrid>
+    <MudGrid Class="dashboard-panels">
+        <MudItem xs="12" lg="6"><MudPaper Class="surface-card"><div class="card-title"><span class="card-icon warning"><MudIcon Icon="@Icons.Material.Filled.Inventory" /></span><div><MudText Typo="Typo.h6">Productos con stock bajo</MudText><small>Prioridad de reposición</small></div></div>
+            <table class="data-table"><thead><tr><th>Producto</th><th>Stock</th><th>Mínimo</th></tr></thead><tbody>
+            @foreach (var p in model.LowStockProducts) { <tr><td>@p.Name</td><td class="danger">@p.Stock @p.Unit</td><td>@p.MinStock</td></tr> }
+            @if (!model.LowStockProducts.Any()) { <tr class="empty-row"><td colspan="3">No hay productos con stock crítico.</td></tr> }
+            </tbody></table></MudPaper></MudItem>
+        <MudItem xs="12" lg="6"><MudPaper Class="surface-card"><div class="card-title"><span class="card-icon info"><MudIcon Icon="@Icons.Material.Filled.History" /></span><div><MudText Typo="Typo.h6">Últimos movimientos</MudText><small>Actividad reciente del depósito</small></div></div>
+            <table class="data-table"><thead><tr><th>Producto</th><th>Tipo</th><th>Stock</th></tr></thead><tbody>
+            @foreach (var m in model.LatestMovements) { <tr><td>@m.ProductName</td><td>@m.MovementType</td><td>@m.NewStock</td></tr> }
+            </tbody></table></MudPaper></MudItem>
+    </MudGrid>
+}
+
+@code {
+    private DashboardDto? model; private string? error;
+    protected override async Task OnInitializedAsync() { try { model = await Inventory.GetDashboardAsync(); } catch (Exception ex) { error = $"No se pudo consultar la base de datos: {ex.Message}"; } }
+}

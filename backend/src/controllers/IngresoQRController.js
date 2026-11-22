@@ -1,8 +1,10 @@
 import ApiResponse from "../helpers/ApiResponse.js";
+import AppError from "../utils/AppError.js";
 
 import {
 
-    ingresoQRService
+    ingresoQRService,
+    reservaService
 
 }
 from "../services/index.js";
@@ -14,6 +16,16 @@ export default class IngresoQRController {
         try{
 
             const {idReserva}=req.params;
+
+            const reserva = await reservaService.obtenerPorId(Number(idReserva));
+
+            if (Number(reserva.idUsuario) !== Number(req.usuario.idUsuario)) {
+                throw new AppError("La reserva no pertenece al usuario autenticado.", 403);
+            }
+
+            if (reserva.estado !== "CONFIRMADA") {
+                throw new AppError("El QR se habilita despuÃ©s de aprobar el pago.", 409);
+            }
 
             const qr=
 

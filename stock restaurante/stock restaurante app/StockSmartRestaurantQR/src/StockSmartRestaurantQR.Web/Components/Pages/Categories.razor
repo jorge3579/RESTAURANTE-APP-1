@@ -1,0 +1,8 @@
+@page "/categorias"
+@attribute [Authorize(Roles="Admin")]
+@inject IInventoryService Inventory
+@inject ISnackbar Snackbar
+<PageTitle>Categorías</PageTitle><div class="page-heading"><div><span class="eyebrow">CATÁLOGO</span><MudText Typo="Typo.h4">Categorías</MudText><p>Organizá los productos para encontrarlos y analizarlos mejor.</p></div></div>
+<MudGrid><MudItem xs="12" md="5"><MudPaper Class="pa-5"><EditForm Model="model" OnValidSubmit="Save"><MudTextField @bind-Value="model.Name" Label="Nombre" Required="true" /><MudTextField @bind-Value="model.Description" Label="Descripción" Lines="3" /><MudButton ButtonType="ButtonType.Submit" Color="Color.Primary" Variant="Variant.Filled" Class="mt-4">Guardar</MudButton></EditForm></MudPaper></MudItem>
+<MudItem xs="12" md="7"><MudPaper Class="pa-5"><table class="data-table"><thead><tr><th>Nombre</th><th>Descripción</th></tr></thead><tbody>@foreach(var c in items){<tr><td>@c.Name</td><td>@c.Description</td></tr>}</tbody></table></MudPaper></MudItem></MudGrid>
+@code { [CascadingParameter] private Task<AuthenticationState> AuthenticationStateTask { get; set; }=null!; private CategoryRequest model=new(); private IReadOnlyList<CategoryDto> items=[]; protected override async Task OnInitializedAsync()=>items=await Inventory.GetCategoriesAsync(); private async Task Save(){var a=await AuthenticationStateTask;var r=await Inventory.SaveCategoryAsync(model,a.User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)!.Value);Snackbar.Add(r.Success?"Categoría guardada.":r.Error!,r.Success?Severity.Success:Severity.Error);model=new();items=await Inventory.GetCategoriesAsync();} }

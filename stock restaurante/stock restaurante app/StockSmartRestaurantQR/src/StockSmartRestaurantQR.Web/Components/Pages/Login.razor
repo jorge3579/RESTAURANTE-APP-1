@@ -1,0 +1,29 @@
+@page "/login"
+@attribute [AllowAnonymous]
+@layout LoginLayout
+
+<PageTitle>Ingresar - StockSmart</PageTitle>
+<section class="login-stage">
+<aside class="login-story">
+    <div class="login-brand"><img src="brand-mark.svg" alt="" /><span>StockSmart</span></div>
+    <div class="login-story-copy">
+        <span class="eyebrow">RESTAURANT SUITE</span>
+        <h1>Todo tu inventario,<br /><em>bajo control.</em></h1>
+        <p>Compras, existencias y ventas en un solo lugar. Información clara para decidir mejor cada día.</p>
+    </div>
+    <div class="login-benefits"><span>✓ Stock en tiempo real</span><span>✓ Reportes profesionales</span><span>✓ Accesos por rol</span></div>
+</aside>
+<MudPaper Class="login-card" Elevation="0">
+    <div class="login-card-heading"><span class="login-kicker">ACCESO SEGURO</span><MudText Typo="Typo.h4">Bienvenido</MudText><p>Ingresá con tu cuenta para continuar.</p></div>
+    @if (Error == "1") { <MudAlert Severity="Severity.Error" Class="mb-4">Usuario o contraseña incorrectos, o MongoDB no está disponible.</MudAlert> }
+    <form method="post" action="auth/login">
+        <AntiforgeryToken />
+        <label class="form-label" for="username">Usuario</label><input id="username" class="form-input" name="Username" required autocomplete="username" />
+        <label class="form-label" for="password">Contraseña</label><input id="password" class="form-input mb-5" name="Password" type="password" required autocomplete="current-password" />
+        <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" FullWidth="true" Size="Size.Large" StartIcon="@Icons.Material.Filled.Login">Ingresar al sistema</MudButton>
+    </form>
+    <div class="login-help"><MudIcon Icon="@Icons.Material.Filled.Lock" Size="Size.Small" /> Tus datos se procesan de forma local y segura.</div>
+</MudPaper>
+</section>
+
+@code { [SupplyParameterFromQuery] public string? Error { get; set; } }

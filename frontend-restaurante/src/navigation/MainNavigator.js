@@ -12,6 +12,7 @@ import PedidosRestauranteScreen from "../screens/pedidos/PedidosRestauranteScree
 import PerfilScreen from "../screens/main/PerfilScreen";
 import GestionNavigator from "./GestionNavigator";
 import ReservasRestauranteScreen from "../screens/reservas/ReservasRestauranteScreen";
+import StockWebScreen from "../screens/stock/StockWebScreen";
 import { COLORS } from "../constants/theme";
 import { RefreshProvider, useGlobalRefresh } from "../context/RefreshContext";
 import { SucursalProvider } from "../context/SucursalContext";
@@ -38,6 +39,8 @@ function RestaurantTabs({ usuario, onLogout }) {
                         iconName = "qrcode-scan";
                     } else if (route.name === "Caja") {
                         iconName = focused ? "cash-register" : "cash-register";
+                    } else if (route.name === "Stock") {
+                        iconName = focused ? "warehouse" : "warehouse";
                     } else if (route.name === "Gestión") {
                         iconName = focused ? "store-edit" : "store-edit-outline";
                     } else if (route.name === "Perfil") {
@@ -86,6 +89,17 @@ function RestaurantTabs({ usuario, onLogout }) {
             <Tab.Screen
                 name="Dashboard"
                 component={DashboardScreen}
+            />
+
+            <Tab.Screen
+                name="Stock"
+                component={StockWebScreen}
+                options={{
+                    title: "Stock",
+                    tabBarLabel: "Stock",
+                    tabBarAccessibilityLabel: "Abrir Stock web",
+                    headerShown: false
+                }}
             />
 
             <Tab.Screen

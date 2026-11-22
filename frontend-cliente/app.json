@@ -3,7 +3,7 @@
     "name": "SmartRestaurantQR Cliente",
     "owner": "jorge3579.1",
     "slug": "smartrestaurantqr-cliente",
-    "version": "1.0.0",
+    "version": "1.1.1",
     "orientation": "portrait",
     "userInterfaceStyle": "light",
     "assetBundlePatterns": [
@@ -25,7 +25,7 @@
     },
     "android": {
       "package": "com.smartrestaurantqr.cliente",
-      "versionCode": 1
+      "versionCode": 3
     },
     "extra": {
       "eas": {

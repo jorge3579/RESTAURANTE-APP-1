@@ -111,22 +111,12 @@ export default class ReservaService extends BaseService {
             fechaReserva: data.fechaReserva,
             horaReserva: data.horaReserva,
             cantidadPersonas: data.cantidadPersonas,
-            estado: ESTADO_RESERVA.PENDIENTE,
+            estado: ESTADO_RESERVA.PENDIENTE_PAGO,
             observaciones: data.observaciones || null,
             codigoQR: null
         });
 
-        // Generar entrada en ingresos_qr automáticamente
-        await this.ingresoQRService.generarQR(resultado.idReserva);
-
         const reservaCreada = await this.obtenerPorId(resultado.idReserva);
-
-        try {
-            const io = getIO();
-            io.to(`sucursal-${data.idSucursal}`).emit("nuevaReserva", reservaCreada);
-        } catch (error) {
-            console.error("Error al emitir socket nuevaReserva:", error.message);
-        }
 
         return reservaCreada;
 
@@ -134,14 +124,37 @@ export default class ReservaService extends BaseService {
 
     async confirmar(idReserva) {
 
-        await this.obtenerPorId(idReserva);
+        const reserva = await this.obtenerPorId(idReserva);
+
+        if (reserva.estado === ESTADO_RESERVA.CONFIRMADA) {
+            return reserva;
+        }
+
+        if (![
+            ESTADO_RESERVA.PENDIENTE,
+            ESTADO_RESERVA.PENDIENTE_PAGO
+        ].includes(reserva.estado)) {
+            throw new AppError("La reserva no puede confirmarse en su estado actual.", 409);
+        }
 
         await this.repository.actualizarEstado(
             idReserva,
             ESTADO_RESERVA.CONFIRMADA
         );
 
-        return await this.obtenerPorId(idReserva);
+        const reservaConfirmada = await this.obtenerPorId(idReserva);
+
+        try {
+            const io = getIO();
+            io.to(`sucursal-${reservaConfirmada.idSucursal}`).emit(
+                "nuevaReserva",
+                reservaConfirmada
+            );
+        } catch (error) {
+            console.error("Error al emitir socket nuevaReserva:", error.message);
+        }
+
+        return reservaConfirmada;
 
     }
 

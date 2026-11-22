@@ -1,3 +1,4 @@
+# Secretos y credenciales — nunca al repositorio
 .env
 **/.env
 !**/.env.example
@@ -7,6 +8,14 @@
 *.p12
 *.key
 *.pem
+password postgres.txt
+sql data.txt
+claves bd.txt
+**/claves bd.txt
+Serial*.txt
+**/Serial*.txt
+
+# Dependencias y cachés
 node_modules/
 **/node_modules/
 .pnpm-store/
@@ -16,25 +25,45 @@ coverage/
 **/.expo/
 dist/
 **/dist*/
+tmp/
 **/android/.gradle/
 **/android/app/build/
 **/android/build/
 .idea/
-*.exe
+.vscode/
+
+# Registros
 *.log
+logs/
 tools/network/*.log
-aplicaciones/
+tools/remote-api/runtime/
+
+# Binarios, instaladores y paquetes comprimidos
+*.exe
+*.msi
+*.msu
+*.rar
+*.7z
+*.bak
+*.backup
+
+# Artefactos de compilación .NET
+**/bin/
+**/obj/
+
+# Respaldos locales
 backups/
 RESPALDO_COMPLETO_*.zip
-password postgres.txt
-sql data.txt
+_archivo-depuracion-*/
+
+# Capturas de depuración en la raíz
 /*.png
 /*.xml
 /*-release.apk
 /Cliente-release.apk
 /Restaurante-release.apk
-!/SmartRestaurantQR-Cliente-final.apk
-!/SmartRestaurantQR-Restaurante-final.apk
+
+# APK distribuibles (sí se publican)
 !aplicaciones/
 aplicaciones/*
 !aplicaciones/SmartRestaurantQR-Cliente-final.apk
@@ -42,3 +71,4 @@ aplicaciones/*
 !aplicaciones/correccion-conexion-sesion-20260716/
 !aplicaciones/correccion-conexion-sesion-20260716/SmartRestaurantQR-Cliente-final.apk
 !aplicaciones/correccion-conexion-sesion-20260716/SmartRestaurantQR-Restaurante-final.apk
+output/apk-publicos-ngrok/

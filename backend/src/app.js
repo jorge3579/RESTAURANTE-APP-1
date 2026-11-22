@@ -1,5 +1,6 @@
 import express from "express";
 import { configureCoreMiddlewares } from "./config/middlewares.js";
+import { stockProxy } from "./config/stockProxy.js";
 import routes from "./routes/index.js";
 import { productoImagenDirectory } from "./middlewares/productoImagenMiddleware.js";
 
@@ -10,6 +11,10 @@ const app = express();
 // La API se publica mediante un único proxy HTTPS (ngrok). Esto permite que
 // express-rate-limit use la IP real sin rechazar X-Forwarded-For.
 app.set("trust proxy", 1);
+
+// Stock se publica bajo el mismo dominio HTTPS que la API. De esta forma
+// ngrok expone backend, Socket.IO y Blazor sin abrir un segundo tunel.
+app.use(stockProxy);
 
 configureCoreMiddlewares(app);
 

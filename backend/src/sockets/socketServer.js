@@ -1,12 +1,41 @@
 import { Server } from "socket.io";
 
+import env from "../config/env.js";
+
 let io = null;
+
+// Igual que en HTTP, los clientes nativos no envían Origin: se permite la
+// conexión sin cabecera y se restringen solo los orígenes de navegador.
+function crearValidadorOrigen(origenesPermitidos) {
+
+    if (origenesPermitidos.includes("*")) {
+
+        return "*";
+
+    }
+
+    return (origin, callback) => {
+
+        if (!origin) {
+
+            return callback(null, true);
+
+        }
+
+        return callback(
+            null,
+            origenesPermitidos.includes(origin)
+        );
+
+    };
+
+}
 
 export function initSocket(server) {
 
     io = new Server(server, {
         cors: {
-            origin: "*",
+            origin: crearValidadorOrigen(env.cors.origins),
             methods: ["GET", "POST", "PUT", "DELETE"]
         }
     });

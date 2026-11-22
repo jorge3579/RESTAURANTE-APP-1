@@ -1,0 +1,6 @@
+**/bin/
+**/obj/
+**/.keys/
+**/wwwroot/uploads/productos/*
+!**/wwwroot/uploads/productos/.gitkeep
+work/

@@ -1,0 +1,18 @@
+<MudNavMenu>
+    <MudText Class="nav-section">Resumen</MudText>
+    <MudNavLink Href="" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Dashboard">Panel general</MudNavLink>
+    <MudText Class="nav-section">Operaciones</MudText>
+    <MudNavLink Href="productos" Icon="@Icons.Material.Filled.Inventory2">Productos</MudNavLink>
+    <MudNavLink Href="stock" Icon="@Icons.Material.Filled.SwapVert">Movimientos</MudNavLink>
+    <MudNavLink Href="ventas" Icon="@Icons.Material.Filled.PointOfSale">Ventas</MudNavLink>
+    <MudNavLink Href="reportes" Icon="@Icons.Material.Filled.Assessment">Reportes</MudNavLink>
+    <AuthorizeView Roles="Admin">
+        <MudText Class="nav-section">Administración</MudText>
+        <MudNavLink Href="categorias" Icon="@Icons.Material.Filled.Category">Categorías</MudNavLink>
+        <MudNavLink Href="proveedores" Icon="@Icons.Material.Filled.LocalShipping">Proveedores</MudNavLink>
+        <MudNavLink Href="usuarios" Icon="@Icons.Material.Filled.Group">Usuarios</MudNavLink>
+        <MudNavLink Href="administracion" Icon="@Icons.Material.Filled.AdminPanelSettings">Auditoría y configuración</MudNavLink>
+    </AuthorizeView>
+    <MudText Class="nav-section">Cuenta</MudText>
+    <MudNavLink Href="cambiar-clave" Icon="@Icons.Material.Filled.Password">Cambiar contraseña</MudNavLink>
+</MudNavMenu>

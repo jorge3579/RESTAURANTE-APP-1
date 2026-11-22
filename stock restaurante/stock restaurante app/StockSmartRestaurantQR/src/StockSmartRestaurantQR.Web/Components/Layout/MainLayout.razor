@@ -1,0 +1,48 @@
+﻿@inherits LayoutComponentBase
+
+<MudThemeProvider Theme="@theme" />
+<MudPopoverProvider />
+<MudDialogProvider />
+<MudSnackbarProvider />
+<MudLayout>
+    <MudAppBar Elevation="0" Class="app-topbar">
+        <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" Class="menu-toggle" OnClick="@(() => drawerOpen = !drawerOpen)" />
+        <div class="topbar-context"><span class="topbar-eyebrow">OPERACIONES</span><span class="topbar-title">Panel de control</span></div>
+        <MudSpacer />
+        <AuthorizeView><Authorized Context="auth">
+            <div class="user-pill"><span class="user-avatar">@Initial(auth.User.Identity?.Name)</span><span class="user-name">@auth.User.Identity?.Name</span></div>
+            <form method="post" action="auth/logout"><AntiforgeryToken /><MudTooltip Text="Cerrar sesión"><MudIconButton Icon="@Icons.Material.Filled.Logout" ButtonType="ButtonType.Submit" Color="Color.Inherit" /></MudTooltip></form>
+        </Authorized></AuthorizeView>
+    </MudAppBar>
+    <MudDrawer @bind-Open="drawerOpen" Variant="DrawerVariant.Responsive" Elevation="0" Class="app-sidebar">
+        <MudDrawerHeader Class="brand-header">
+            <img src="brand-mark.svg" alt="StockSmart" class="brand-mark" />
+            <div><div class="brand-name">StockSmart</div><div class="brand-subtitle">Restaurant Suite</div></div>
+        </MudDrawerHeader>
+        <NavMenu />
+        <div class="sidebar-footer"><span class="status-dot"></span><div><strong>Sistema operativo</strong><small>Bases conectadas</small></div></div>
+    </MudDrawer>
+    <MudMainContent Class="app-main"><MudContainer MaxWidth="MaxWidth.ExtraLarge" Class="content-container">@Body</MudContainer></MudMainContent>
+</MudLayout>
+
+<div id="blazor-error-ui" data-nosnippet>
+    An unhandled error has occurred.
+    <a href="." class="reload">Reload</a>
+    <span class="dismiss">🗙</span>
+</div>
+
+@code {
+    private bool drawerOpen = true;
+    private readonly MudTheme theme = new()
+    {
+        PaletteLight = new PaletteLight
+        {
+            Primary = "#0f766e", Secondary = "#d97706", Tertiary = "#2563eb",
+            AppbarBackground = "#ffffff", AppbarText = "#18324b", Background = "#f3f6f9",
+            Surface = "#ffffff", DrawerBackground = "#0b1f33", DrawerText = "#d9e5ef",
+            DrawerIcon = "#8fb3c9", TextPrimary = "#152536", TextSecondary = "#64748b",
+            Success = "#15803d", Warning = "#d97706", Error = "#dc2626", Info = "#2563eb"
+        }
+    };
+    private static string Initial(string? name) => string.IsNullOrWhiteSpace(name) ? "U" : name[..1].ToUpperInvariant();
+}

@@ -45,6 +45,12 @@ export default class ComandaService extends BaseService {
 
     async crear(data) {
 
+        const existente = await this.repository.obtenerPorPedido(data.idPedido);
+
+        if (existente) {
+            return ComandaDTO.fromDatabase(existente);
+        }
+
         const resultado = await this.repository.crear({
             idPedido: data.idPedido,
             idSucursal: data.idSucursal,

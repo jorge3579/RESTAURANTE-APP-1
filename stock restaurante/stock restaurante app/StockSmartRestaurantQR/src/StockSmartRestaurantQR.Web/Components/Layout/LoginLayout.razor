@@ -1,0 +1,10 @@
+@inherits LayoutComponentBase
+<MudThemeProvider Theme="@theme" /><MudPopoverProvider /><MudSnackbarProvider />
+<main class="login-shell">@Body</main>
+
+@code {
+    private readonly MudTheme theme = new()
+    {
+        PaletteLight = new PaletteLight { Primary = "#0f766e", Secondary = "#d97706", Background = "#f3f6f9", Surface = "#ffffff", TextPrimary = "#152536" }
+    };
+}

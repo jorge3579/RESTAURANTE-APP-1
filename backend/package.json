@@ -13,7 +13,6 @@
         "format": "prettier --write .",
         "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --runInBand",
         "coverage": "node --experimental-vm-modules node_modules/jest/bin/jest.js --coverage --runInBand"
-        
     },
     "keywords": [
         "restaurant",
@@ -35,6 +34,7 @@
         "express-rate-limit": "^8.0.1",
         "express-validator": "^7.3.2",
         "helmet": "^8.2.0",
+        "http-proxy-middleware": "^4.2.0",
         "jsonwebtoken": "^9.0.3",
         "mercadopago": "^2.8.0",
         "morgan": "^1.11.0",

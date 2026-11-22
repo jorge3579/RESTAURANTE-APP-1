@@ -3,6 +3,29 @@ import { mercadoPagoService } from "../services/index.js";
 
 export default class MercadoPagoController {
 
+    static async simularAprobacion(req, res, next) {
+
+        try {
+
+            const resultado = await mercadoPagoService.simularAprobacion(
+                req.usuario.idUsuario,
+                req.body
+            );
+
+            return ApiResponse.success(
+                res,
+                "Pago de Mercado Pago simulado y aprobado correctamente.",
+                resultado
+            );
+
+        } catch (error) {
+
+            next(error);
+
+        }
+
+    }
+
     static async crearPreferencia(req, res, next) {
 
         try {

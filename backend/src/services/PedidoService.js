@@ -72,7 +72,9 @@ export default class PedidoService extends BaseService {
                 idSucursal: data.idSucursal,
                 numeroPedido,
                 tipoConsumo: data.tipoConsumo,
-                estado: ESTADO_PEDIDO.CONFIRMADO,
+                estado: data.idReserva
+                    ? ESTADO_PEDIDO.PENDIENTE_PAGO
+                    : ESTADO_PEDIDO.CONFIRMADO,
                 subtotal,
                 descuento: 0,
                 total: subtotal,
@@ -88,22 +90,68 @@ export default class PedidoService extends BaseService {
             return resultado.idPedido;
         });
 
+        const pedidoCreado = await this.obtenerPorId(idPedido);
+
+        if (!data.idReserva) {
+            await this.comandaService.crear({
+                idPedido,
+                idSucursal: data.idSucursal,
+                observaciones: data.observaciones || null
+            });
+
+            try {
+                const io = getIO();
+                io.to(`sucursal-${data.idSucursal}`).emit("nuevoPedido", pedidoCreado);
+            } catch (error) {
+                console.error("Error al emitir socket nuevoPedido:", error.message);
+            }
+        }
+
+        return pedidoCreado;
+    }
+
+    async activarDespuesDePago(idPedido) {
+
+        const pedido = await this.obtenerPorId(idPedido);
+
+        if (pedido.estado === ESTADO_PEDIDO.CONFIRMADO) {
+            await this.comandaService.crear({
+                idPedido,
+                idSucursal: pedido.idSucursal,
+                observaciones: pedido.observaciones || null
+            });
+            return pedido;
+        }
+
+        if (pedido.estado !== ESTADO_PEDIDO.PENDIENTE_PAGO) {
+            throw new AppError("El pedido no estÃ¡ pendiente de pago.", 409);
+        }
+
         await this.comandaService.crear({
             idPedido,
-            idSucursal: data.idSucursal,
-            observaciones: data.observaciones || null
+            idSucursal: pedido.idSucursal,
+            observaciones: pedido.observaciones || null
         });
 
-        const pedidoCreado = await this.obtenerPorId(idPedido);
+        await this.repository.actualizarEstado(
+            idPedido,
+            ESTADO_PEDIDO.CONFIRMADO
+        );
+
+        const pedidoConfirmado = await this.obtenerPorId(idPedido);
 
         try {
             const io = getIO();
-            io.to(`sucursal-${data.idSucursal}`).emit("nuevoPedido", pedidoCreado);
+            io.to(`sucursal-${pedido.idSucursal}`).emit(
+                "nuevoPedido",
+                pedidoConfirmado
+            );
         } catch (error) {
             console.error("Error al emitir socket nuevoPedido:", error.message);
         }
 
-        return pedidoCreado;
+        return pedidoConfirmado;
+
     }
 
     async cambiarEstado(idPedido, estado) {

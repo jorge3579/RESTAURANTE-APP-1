@@ -17,7 +17,10 @@ export default function ReservasRestauranteScreen() {
     const cargar = useCallback(async () => {
         try {
             const data = await reservaService.listar();
-            setReservas(data.filter((item) => Number(item.idSucursal) === Number(idSucursal)));
+            setReservas(data.filter((item) =>
+                Number(item.idSucursal) === Number(idSucursal) &&
+                item.estado !== "PENDIENTE_PAGO"
+            ));
         } catch {
             Alert.alert("Error", "No se pudieron cargar las reservas.");
         } finally {

@@ -18,6 +18,13 @@ router.post(
 router.use(authMiddleware);
 
 router.post(
+    "/simulacion/aprobar",
+    crearPreferenciaValidator,
+    validateRequest,
+    MercadoPagoController.simularAprobacion
+);
+
+router.post(
     "/preferencia",
     crearPreferenciaValidator,
     validateRequest,

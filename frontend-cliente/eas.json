@@ -18,7 +18,7 @@
             "environment": "production",
             "node": "20.18.3",
             "env": {
-                "EXPO_PUBLIC_API_URL": "http://192.168.0.4:3000/api"
+                "EXPO_PUBLIC_API_URL": "http://192.168.0.7:3000/api"
             },
             "android": {
                 "buildType": "apk"
@@ -28,7 +28,7 @@
             "environment": "production",
             "node": "20.18.3",
             "env": {
-                "EXPO_PUBLIC_API_URL": "http://192.168.0.5:3000/api"
+                "EXPO_PUBLIC_API_URL": "https://emphasis-expanse-evolution.ngrok-free.dev/api"
             },
             "android": {
                 "buildType": "apk"

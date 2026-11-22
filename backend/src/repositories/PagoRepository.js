@@ -83,6 +83,38 @@ export default class PagoRepository extends BaseRepository {
 
     }
 
+    async obtenerAprobadoPorPedido(idPedido) {
+
+        const query = `
+            SELECT
+                p.id_pago,
+                p.id_pedido,
+                p.id_usuario,
+                CONCAT(u.nombre, ' ', u.apellido) AS cliente,
+                p.metodo_pago,
+                p.proveedor,
+                p.referencia_externa,
+                p.monto,
+                p.estado,
+                p.fecha_aprobacion AS "fechaPago",
+                p.fecha_creacion,
+                p.fecha_modificacion
+            FROM pagos p
+            INNER JOIN usuarios u
+                ON u.id_usuario = p.id_usuario
+            WHERE p.id_pedido = $1
+              AND p.metodo_pago = 'MERCADO_PAGO'
+              AND p.estado = 'APROBADO'
+            ORDER BY p.fecha_aprobacion DESC
+            LIMIT 1
+        `;
+
+        const result = await this.query(query, [idPedido]);
+
+        return result[0] || null;
+
+    }
+
     async crear(data) {
 
         const query = `

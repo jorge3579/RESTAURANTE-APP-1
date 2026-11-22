@@ -7,7 +7,19 @@
 **/.expo/
 **/.eas-inspect-*/
 **/dist/
+**/dist-*/
 **/coverage/
+**/android/.gradle/
+**/android/build/
+**/android/app/build/
+frontend-cliente/android/.gradle/
+frontend-cliente/android/build/
+frontend-cliente/android/app/build/
+frontend-restaurante/android/.gradle/
+frontend-restaurante/android/build/
+frontend-restaurante/android/app/build/
+**/bin/
+**/obj/
 
 # Secretos y archivos locales no necesarios para compilar las aplicaciones.
 .env
@@ -24,6 +36,19 @@ pnpm-debug.log*
 
 # Instaladores, respaldos y documentacion operativa ajenos al APK.
 postgresql-*-windows-x64.exe
+*.exe
+*.apk
+*.aab
 password postgres.txt
 sql data.txt
 tools/network/*.log
+aplicaciones/
+backend/
+backups/
+deploy/
+docs/
+output/
+tmp/
+stock restaurante/
+tools/
+.github/

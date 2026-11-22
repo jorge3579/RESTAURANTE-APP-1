@@ -1,0 +1,49 @@
+@page "/productos"
+@attribute [Authorize]
+@inject IInventoryService Inventory
+@inject IFileStorageService Files
+@inject ISnackbar Snackbar
+
+<PageTitle>Productos</PageTitle>
+<div class="page-heading"><div><MudText Typo="Typo.h4">Productos</MudText><MudText Color="Color.Secondary">Catálogo, precios y existencias</MudText></div></div>
+<MudPaper Class="pa-4 mb-5"><div class="toolbar"><MudTextField @bind-Value="search" Label="Buscar por nombre o código" Immediate="true" /><MudButton OnClick="Load" Variant="Variant.Filled" Color="Color.Primary">Buscar</MudButton></div></MudPaper>
+@if (isAdmin)
+{
+    <MudExpansionPanels Class="mb-5"><MudExpansionPanel Text="Crear o editar producto" Expanded="@editorOpen">
+        <EditForm Model="model" OnValidSubmit="Save"><DataAnnotationsValidator />
+            <MudGrid>
+                <MudItem xs="12" md="3"><MudTextField @bind-Value="model.Code" Label="Código SKU" Required="true" /></MudItem>
+                <MudItem xs="12" md="5"><MudTextField @bind-Value="model.Name" Label="Nombre" Required="true" /></MudItem>
+                <MudItem xs="6" md="2"><MudNumericField @bind-Value="model.Cost" Label="Costo" Min="0" /></MudItem>
+                <MudItem xs="6" md="2"><MudNumericField @bind-Value="model.Price" Label="Precio" Min="0" /></MudItem>
+                <MudItem xs="12" md="4"><MudSelect T="int" @bind-Value="model.CategoryId" Label="Categoría">@foreach (var c in categories) { <MudSelectItem Value="c.Id">@c.Name</MudSelectItem> }</MudSelect></MudItem>
+                <MudItem xs="12" md="4"><MudSelect T="int?" @bind-Value="model.SupplierId" Label="Proveedor" Clearable="true">@foreach (var s in suppliers) { <MudSelectItem T="int?" Value="s.Id">@s.Name</MudSelectItem> }</MudSelect></MudItem>
+                <MudItem xs="6" md="2"><MudTextField @bind-Value="model.Unit" Label="Unidad" /></MudItem>
+                <MudItem xs="6" md="2"><MudNumericField @bind-Value="model.MinStock" Label="Stock mínimo" Min="0" /></MudItem>
+                <MudItem xs="12" md="8"><MudTextField @bind-Value="model.Description" Label="Descripción" /></MudItem>
+                <MudItem xs="12" md="4"><InputFile OnChange="SelectImage" accept=".jpg,.jpeg,.png,.webp" /></MudItem>
+            </MudGrid>
+            <MudButton ButtonType="ButtonType.Submit" Color="Color.Primary" Variant="Variant.Filled" Class="mt-4">Guardar</MudButton>
+            <MudButton OnClick="New" Class="mt-4 ms-2">Limpiar</MudButton>
+        </EditForm>
+    </MudExpansionPanel></MudExpansionPanels>
+}
+<MudPaper Class="pa-4">
+    @if (products is null) { <MudProgressLinear Indeterminate="true" /> }
+    else { <table class="data-table"><thead><tr><th>Código</th><th>Producto</th><th>Categoría</th><th>Stock</th><th>Precio</th><th></th></tr></thead><tbody>
+        @foreach (var p in products.Items) { <tr class="@(p.Stock <= p.MinStock ? "low-stock" : null)"><td>@p.Code</td><td>@p.Name</td><td>@p.CategoryName</td><td>@p.Stock @p.Unit</td><td>@p.Price.ToString("C")</td><td>@if(isAdmin){<MudIconButton Icon="@Icons.Material.Filled.Edit" OnClick="@(() => Edit(p))" /><MudIconButton Icon="@Icons.Material.Filled.Delete" Color="Color.Error" OnClick="@(() => Delete(p.Id))" />}</td></tr> }
+    </tbody></table> }
+</MudPaper>
+
+@code {
+    [CascadingParameter] private Task<AuthenticationState> AuthenticationStateTask { get; set; } = null!;
+    private PagedResult<ProductDto>? products; private IReadOnlyList<CategoryDto> categories = []; private IReadOnlyList<SupplierDto> suppliers = [];
+    private ProductRequest model = new(); private string? search; private bool isAdmin; private bool editorOpen; private IBrowserFile? image;
+    protected override async Task OnInitializedAsync() { var auth = await AuthenticationStateTask; isAdmin = auth.User.IsInRole("Admin"); categories = await Inventory.GetCategoriesAsync(); suppliers = await Inventory.GetSuppliersAsync(); await Load(); }
+    private async Task Load() => products = await Inventory.GetProductsAsync(search, 1, 100);
+    private void New() { model = new(); image = null; editorOpen = true; }
+    private void Edit(ProductDto p) { model = new() { Id=p.Id, Code=p.Code, Name=p.Name, Description=p.Description, CategoryId=p.CategoryId, SupplierId=p.SupplierId, Price=p.Price, Cost=p.Cost, MinStock=p.MinStock, Unit=p.Unit, ImagePath=p.ImagePath }; editorOpen = true; }
+    private void SelectImage(InputFileChangeEventArgs e) => image = e.File;
+    private async Task Save() { try { if (image is not null) { await using var stream = image.OpenReadStream(5 * 1024 * 1024); model.ImagePath = await Files.SaveProductImageAsync(stream, image.Name); } var auth = await AuthenticationStateTask; var result = await Inventory.SaveProductAsync(model, auth.User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)!.Value); if (!result.Success) { Snackbar.Add(result.Error!, Severity.Error); return; } Snackbar.Add("Producto guardado.", Severity.Success); New(); await Load(); } catch(Exception ex) { Snackbar.Add(ex.Message, Severity.Error); } }
+    private async Task Delete(int id) { var auth = await AuthenticationStateTask; var result = await Inventory.DeleteProductAsync(id, auth.User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)!.Value); Snackbar.Add(result.Success ? "Producto desactivado." : result.Error!, result.Success ? Severity.Success : Severity.Error); await Load(); }
+}

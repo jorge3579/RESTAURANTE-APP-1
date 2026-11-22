@@ -80,6 +80,35 @@ export default class ComandaRepository extends BaseRepository {
 
     }
 
+    async obtenerPorPedido(idPedido) {
+
+        const query = `
+            SELECT
+                c.id_comanda,
+                c.id_pedido,
+                c.id_sucursal,
+                s.nombre AS sucursal,
+                c.estado,
+                c.tiempo_estimado_minutos,
+                c.observaciones,
+                c.fecha_inicio,
+                c.fecha_lista AS "fechaFinalizacion",
+                c.fecha_creacion,
+                c.fecha_modificacion
+            FROM comandas c
+            INNER JOIN sucursales s
+                ON s.id_sucursal = c.id_sucursal
+            WHERE c.id_pedido = $1
+            ORDER BY c.fecha_creacion ASC
+            LIMIT 1
+        `;
+
+        const result = await this.query(query, [idPedido]);
+
+        return result[0] || null;
+
+    }
+
     async crear(data) {
 
         const query = `

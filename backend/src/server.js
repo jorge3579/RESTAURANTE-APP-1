@@ -4,11 +4,16 @@ import { createServer } from "node:http";
 import app from "./app.js";
 import { connectDatabase } from "./config/database.js";
 import databaseManager from "./config/databaseManager.js";
+import { stockProxy } from "./config/stockProxy.js";
 import { iniciarJobs } from "./jobs/index.js";
 import { initSocket } from "./sockets/socketServer.js";
 
 const PORT = Number(process.env.PORT || 3000);
 const httpServer = createServer(app);
+
+// Las conexiones interactivas de Blazor usan WebSocket y no atraviesan el
+// ciclo normal de middleware de Express.
+httpServer.on("upgrade", stockProxy.upgrade);
 
 async function iniciarServidor() {
     try {
