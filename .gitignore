@@ -72,3 +72,7 @@ aplicaciones/*
 !aplicaciones/correccion-conexion-sesion-20260716/SmartRestaurantQR-Cliente-final.apk
 !aplicaciones/correccion-conexion-sesion-20260716/SmartRestaurantQR-Restaurante-final.apk
 output/apk-publicos-ngrok/
+
+# Capturas y estado del canal de WhatsApp (datos locales)
+tools/whatsapp/runtime/
+
