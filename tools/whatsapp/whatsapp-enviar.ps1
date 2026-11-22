@@ -98,4 +98,12 @@ if ($NoEnviar) {
 Start-Sleep -Milliseconds 1500
 
 Write-Host "Mensaje enviado."
+
+# Refresca la referencia del detector: asi el propio mensaje enviado no se
+# reporta como una novedad en la proxima revision.
+$detectar = Join-Path $PSScriptRoot "whatsapp-detectar.ps1"
+if (Test-Path $detectar) {
+    & powershell.exe -NoProfile -ExecutionPolicy Bypass -File $detectar | Out-Null
+}
+
 exit 0
