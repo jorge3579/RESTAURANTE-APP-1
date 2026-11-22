@@ -84,10 +84,21 @@ $cuadroY = $rect.Top + [int]($alto * 0.955)
 ClicEn $cuadroX $cuadroY
 
 # Limpia cualquier borrador previo y escribe el mensaje.
+# SendKeys interpreta como comandos los caracteres ( ) { } [ ] + ^ % ~ y
+# demas, por eso se usa el portapapeles y Ctrl+V en lugar de escribir letra
+# por letra: asi el texto llega literal, con cualquier signo, tilde o emoji.
 [System.Windows.Forms.SendKeys]::SendWait("^a")
 Start-Sleep -Milliseconds 200
-[System.Windows.Forms.SendKeys]::SendWait($Mensaje)
-Start-Sleep -Milliseconds 900
+[System.Windows.Forms.SendKeys]::SendWait("{DEL}")
+Start-Sleep -Milliseconds 200
+
+$anteriorPortapapeles = $null
+try { $anteriorPortapapeles = [System.Windows.Forms.Clipboard]::GetText() } catch {}
+
+[System.Windows.Forms.Clipboard]::SetText($Mensaje)
+Start-Sleep -Milliseconds 300
+[System.Windows.Forms.SendKeys]::SendWait("^v")
+Start-Sleep -Milliseconds 1200
 
 if ($NoEnviar) {
     Write-Host "Mensaje escrito sin enviar (-NoEnviar)."
