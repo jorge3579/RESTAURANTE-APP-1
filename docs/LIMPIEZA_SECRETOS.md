@@ -48,7 +48,7 @@ Ese archivo está excluido del repositorio por `.gitignore`. **Conviene borrarlo
 o moverlo a un almacenamiento cifrado** una vez confirmado que no hace falta,
 porque contiene las credenciales antiguas.
 
-## 2. Rotación del token de ngrok — pendiente, requiere el panel de ngrok
+## 2. Rotación del token de ngrok — completado
 
 ### Situación
 
@@ -59,46 +59,46 @@ Ya se movió a la variable de entorno de usuario `NGROK_AUTHTOKEN`, y el archivo
 Se verificó que el token **no quedó registrado en ningún log** del proyecto ni
 del runtime de ngrok.
 
-### Por qué no se puede rotar desde aquí
+### Verificación previa al cambio
 
-Rotar el token exige entrar al panel de ngrok con la cuenta, y no hay credencial
-de la API de administración de ngrok en el equipo: el `authtoken` sirve para
-autenticar el túnel, no para administrar la cuenta.
+Antes de rotar se comprobó en el panel de ngrok que
+`emphasis-expanse-evolution.ngrok-free.dev` es el **dominio de desarrollo de la
+cuenta**, no una propiedad del token. Por eso rotar el token no cambia la URL
+que usan los APK.
 
-### Advertencia importante antes de rotarlo
+### Qué se hizo
 
-**Los APK que hoy se distribuyen apuntan al dominio
-`emphasis-expanse-evolution.ngrok-free.dev`.** Ese dominio es un dominio
-reservado que pertenece a la **cuenta** de ngrok, no al token.
+1. Se entró al panel de ngrok con la cuenta de la organización.
+2. Se pulsó **Rotate authtoken**, que revoca el token anterior y genera uno nuevo.
+3. Se actualizó la variable de entorno de usuario `NGROK_AUTHTOKEN` con el token
+   nuevo.
+4. Se reinició el agente de ngrok.
 
-Por lo tanto:
+### Resultado verificado
 
-- Rotar el token **no cambia el dominio**, porque el dominio se conserva en la
-  cuenta.
-- Pero si se usa `ngrok config add-authtoken` con el token nuevo y el dominio
-  reservado se hubiera asignado de otra forma, hay que **volver a verificar el
-  túnel** y, de ser necesario, recompilar los APK.
+| Comprobación | Resultado |
+| --- | --- |
+| Túnel HTTPS con el dominio reservado | `https://emphasis-expanse-evolution.ngrok-free.dev` |
+| API pública (`/api/health`) | **UP** |
+| Backend local | **UP** |
+| Stock público (`/stock/`) | **HTTP 200** |
 
-### Pasos recomendados (en el panel de ngrok)
+El token anterior (`...nf3rXB`) quedó revocado y ya no autentica.
+
+### Nota de seguridad
+
+El token nuevo no se escribe en este documento ni en ningún archivo del
+repositorio: vive únicamente en la variable de entorno `NGROK_AUTHTOKEN`.
+
+### Si hay que volver a rotarlo
 
 1. Entrar a `https://dashboard.ngrok.com/get-started/your-authtoken`.
-2. Pulsar **Revoke** o **Regenerate** para invalidar el token actual.
-3. Copiar el token nuevo.
-4. Ejecutar en PowerShell:
+2. Pulsar **Rotate authtoken** y marcar las dos casillas de confirmación.
+3. Copiar el token nuevo y actualizar la variable:
 
 ```powershell
 [Environment]::SetEnvironmentVariable("NGROK_AUTHTOKEN", "TOKEN_NUEVO", "User")
 ```
 
-5. Reiniciar ngrok y comprobar:
-
-```powershell
-ngrok http 3000 --url https://emphasis-expanse-evolution.ngrok-free.dev
-Invoke-RestMethod http://127.0.0.1:4040/api/tunnels
-```
-
-6. Verificar la API pública:
-   `https://emphasis-expanse-evolution.ngrok-free.dev/api/health`
-
-Si el túnel no levanta con el dominio reservado, revisar que el dominio siga
-asociado a la cuenta y que el token nuevo corresponda a la misma cuenta.
+4. Detener y reiniciar el agente de ngrok.
+5. Verificar `https://emphasis-expanse-evolution.ngrok-free.dev/api/health`.
